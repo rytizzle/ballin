@@ -1,0 +1,4 @@
+Flask==2.0.2
+gunicorn==20.1.0
+grpcio==1.26.0rc1
+firebase-admin==5.2.0

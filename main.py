@@ -1,28 +1,74 @@
-from flask import Flask, render_template, request, Blueprint, send_from_directory,jsonify,abort
+from flask import Flask, render_template, request, Blueprint, send_from_directory,jsonify,abort, redirect, url_for
 import os
 
-import firebase_admin
-from firebase_admin import credentials, auth
 
-cred = credentials.Certificate("ballin-338306-ad7c80988861.json")
-firebase_admin.initialize_app(cred)
+# import firebase_admin
+# from firebase_admin import credentials, auth
+# cred = credentials.Certificate("ballin-338306-ad7c80988861.json")
+# firebase_admin.initialize_app(cred)
 
-# auth.create_user(email = 'ryan@test.com', password = '123456')
 
-# app = Flask(__name__)
 
-# @app.route("/")
-# def hello_world():
-#     name = os.environ.get("NAME", "World")
-#     return "Hello {}!".format(name)
+import pyrebase
+firebaseConfig = {
+  'apiKey': "AIzaSyCfST8hcWjnAGwtNKsnd7vzUNJy22Qkyqo",
+  'authDomain': "ballin-338306.firebaseapp.com",
+  'projectId': "ballin-338306",
+  'storageBucket': "ballin-338306.appspot.com",
+  'messagingSenderId': "783132420898",
+  'appId': "1:783132420898:web:714816832bceda3fa5d37b",
+  'measurementId': "G-0FBFEGSGLS",
+  'databaseURL':''
+}
 
-# @app.route("/kenny", methods=['GET', 'POST'])
-# def hello_kenny():
-#     if request.method == 'POST':
-#         email = request.form.get('email')
-#         password = request.form.get('password1')
-#         password2 = request.form.get('password2')
-#     return render_template() #input KM html code here
+firebase = pyrebase.initialize_app(firebaseConfig)
+auth = firebase.auth()
+
+# auth_test = (auth.sign_in_with_email_and_password('test@test.com', '1234567222'))
+# print(auth_test.get('registered'))
+# print(auth.sign_in_with_email_and_password('test@test.com', 'WRONGPASSWORD'))
+app = Flask(__name__)
+
+@app.route("/home")
+def home():
+    return render_template('home_page.html')
+
+@app.route("/", methods=['GET', 'POST'])
+def hello_kenny():
+    if request.method == 'POST':
+        #Handle login form
+        if request.form['action'] == 'login':
+            data = request.form
+            email = data.get('user_email')
+            password = data.get('user_password')
+            try:
+                signin = auth.sign_in_with_email_and_password(email, password)
+                print('signing in')
+                return redirect(url_for('home'))
+            except:
+                pass
+
+        #Handle signup form
+        if request.form['action'] == 'create':
+            data = request.form
+            create_email = data.get('create_email')
+            create_pw = data.get('create_password')
+            check_create_password = data.get('check_create_password')
+            if create_pw != check_create_password:
+                pass
+            elif len(create_pw) < 7:
+                pass 
+
+            else:
+                #add user to FB
+                try:
+                    auth.create_user_with_email_and_password(email =  create_email, password = create_pw)
+                    print('Successfully created new account')
+                except:
+                    print('Email already exists')
+                #input message flash logic here
+                #redirect
+    return render_template('index.html') #input KM html code here
 
 
 # # users = [{'uid': 1, 'name': 'Noah Schairer'}]
@@ -30,6 +76,6 @@ firebase_admin.initialize_app(cred)
 # # def userinfo():
 # #     return {'data': users}, 200   
 
-# if __name__ == "__main__":
-#     app.run(debug=True, host="0.0.0.0", port=int(os.environ.get("PORT", 8080)))
+if __name__ == "__main__":
+    app.run(debug=True, host="0.0.0.0", port=int(os.environ.get("PORT", 8080)))
 

@@ -28,5 +28,5 @@ pyasn1-modules==0.2.8
 pycryptodome==3.4.3
 pyparsing==3.0.6
 python-jwt==2.0.1
-requests==2.11.1
+requests
 Werkzeug==2.0.2

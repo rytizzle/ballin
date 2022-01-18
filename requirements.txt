@@ -1,13 +1,12 @@
 
 Pyrebase==3.0.27
-CacheControl==0.12.10
+# CacheControl==0.12.10
 cachetools==4.2.4
 certifi==2021.10.8
 charset-normalizer==2.0.10
 click==8.0.3
 firebase-admin==5.2.0
 Flask==2.0.2
-google-cloud-firestore==2.3.4
 google-cloud-storage==2.0.0
 grpcio==1.43.0
 grpcio-status==1.43.0

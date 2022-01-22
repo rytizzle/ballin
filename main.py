@@ -1,15 +1,17 @@
 from flask import Flask, render_template, request, Blueprint, send_from_directory,jsonify,abort, redirect, url_for
 import os
-
-
-# import firebase_admin
-# from firebase_admin import credentials, auth
-# cred = credentials.Certificate("ballin-338306-ad7c80988861.json")
-# firebase_admin.initialize_app(cred)
-
-
-
+import firebase_admin
+from firebase_admin import credentials, auth
+from functools import wraps
+cred = credentials.Certificate("ballin-338306-ad7c80988861.json") #test to see if you can remove before hosting to cloud run
+firebase = firebase_admin.initialize_app(cred)
 import pyrebase
+from google.cloud import bigquery
+
+os.environ["GOOGLE_APPLICATION_CREDENTIALS"] = "service_key.json"
+
+
+
 firebaseConfig = {
   'apiKey': "AIzaSyCfST8hcWjnAGwtNKsnd7vzUNJy22Qkyqo",
   'authDomain': "ballin-338306.firebaseapp.com",
@@ -21,17 +23,41 @@ firebaseConfig = {
   'databaseURL':''
 }
 
-firebase = pyrebase.initialize_app(firebaseConfig)
-auth = firebase.auth()
+pb = pyrebase.initialize_app(firebaseConfig)
 
-# auth_test = (auth.sign_in_with_email_and_password('test@test.com', '1234567222'))
-# print(auth_test.get('registered'))
-# print(auth.sign_in_with_email_and_password('test@test.com', 'WRONGPASSWORD'))
+
+# client = bigquery.Client()
+# query = f"""
+# SELECT *
+#     FROM `ballin-338306.ballin.parks`"""
+# query_job = client.query(query)
+# print(query_job.result())
 app = Flask(__name__)
 
+# def check_token(f):
+#     @wraps(f)
+#     def wrap(*args,**kwargs):
+#         if not request.headers.get('authorization'):
+#             return {'message': 'No token provided'},400
+#         try:
+#             user = auth.verify_id_token(request.headers['authorization'])
+#             request.user = user
+#         except:
+#             return {'message':'Invalid token provided.'},400
+#         return f(*args, **kwargs)
+#     return wrap
+
+
 @app.route("/home")
+# @check_token
 def home():
-    return render_template('home_page.html')
+    client = bigquery.Client()
+    #use pandas GBQ
+    query = f"""
+    SELECT *
+     FROM `ballin-338306.ballin.parks`"""
+    query_job = client.query(query)
+    return render_template('home_page.html', results = query_job.result())
 
 @app.route("/", methods=['GET', 'POST'])
 def hello_kenny():
@@ -42,11 +68,15 @@ def hello_kenny():
             email = data.get('user_email')
             password = data.get('user_password')
             try:
-                signin = auth.sign_in_with_email_and_password(email, password)
+                signin_user = pb.auth().sign_in_with_email_and_password(email, password)
+                token = signin_user['idToken']
                 print('signing in')
+                print(request.headers)
+                # request.headers['authorization'] = token
+                # return{'token':token}, 200
                 return redirect(url_for('home'))
             except:
-                pass
+                return {'message':'There was an error logging in'}, 400
 
         #Handle signup form
         if request.form['action'] == 'create':
@@ -62,7 +92,7 @@ def hello_kenny():
             else:
                 #add user to FB
                 try:
-                    auth.create_user_with_email_and_password(email =  create_email, password = create_pw)
+                    pb.auth().create_user_with_email_and_password(email =  create_email, password = create_pw)
                     print('Successfully created new account')
                 except:
                     print('Email already exists')

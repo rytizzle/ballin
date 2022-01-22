@@ -1,53 +1,131 @@
 <!doctype html>
 <html lang="en">
+
   <head>
     <!-- Required meta tags -->
     <meta charset="utf-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
 
     <!-- Bootstrap CSS -->
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-1BmE4kWBq78iYhFldvKuhfTAU6auU8tT94WrHftjDbrCEXSU1oBoqyl2QvZ6jIW3" crossorigin="anonymous">
-
+    <link href="https://fonts.googleapis.com/css?family=Lato:300,400,700&display=swap" rel="stylesheet">
+    <link type= "text/css" href="{{ url_for('static', filename='styles/home_page_style.css') }}">
     <title>Ballin Content</title>
   </head>
   <style>
-   body {
 
-    background: url('https://wallpapercave.com/wp/wp2825217.jpg') no-repeat center center fixed;
-    background-size: cover;
-   }
-
-   #main-container {
-     background: rgba(0,0,255,0.5);
-     margin-top: 40px;
-     border-radius: 15px;
-
-   }
-   #form-container {
-      color: white;
-      opacity: 1;
-   }
-
-   #create-account-form {
-     border-left: 0.1rem solid white;
-   }
   </style>
+
   <body>
     <div id="main-container" class="container">
-      <div id="form-container" class="container">
+      <div id="content-container" class="container">
         <div class="mb-2 row">
           <div class="col text-center">
             <h1 id="title">Content will be here</h1>
           </div>
         </div>
         <div class="mb-2 row">
-          <p>This will have content</p>
+          <div class="mb-2 col">
+            <div class="col text-center">
+              <div class="list-group">
+                <a href="#" class="list-group-item list-group-item-action flex-column align-items-start active">
+                  <div class="d-flex w-100 justify-content-between">
+                    <h5 class="mb-1">Orange Memorial Park</h5>
+                    <small>35 W Orange Ave South San Francisco, CA 94080</small>
+                  </div>
+                </a>
+                <a href="#" class="list-group-item list-group-item-action flex-column align-items-start">
+                  <div class="d-flex w-100 justify-content-between">
+                    <h5 class="mb-1">Sunfish Park</h5>
+                    <small class="text-muted">Sunfish Park, Foster City, CA 94404</small>
+                  </div>
+                </a>
+                <a href="#" class="list-group-item list-group-item-action flex-column align-items-start">
+                  <div class="d-flex w-100 justify-content-between">
+                    <h5 class="mb-1">Catamaran Park</h5>
+                    <small class="text-muted">499 Catamaran St #479, Foster City, CA 94404</small>
+                  </div>
+                </a>
+              </div>
+            </div>
+          </div>
+          <div class="mb-2 col">
+            <div class="content">
+              <div class="calendar-container">
+                <div class="calendar">
+                  <div class="year-header">
+                    <span class="left-button" id="prev"> &lang; </span>
+                    <span class="year" id="label"></span>
+                    <span class="right-button" id="next"> &rang; </span>
+                  </div>
+                  <table class="months-table">
+                    <tbody>
+                      <tr class="months-row">
+                        <td class="month">Jan</td>
+                        <td class="month">Feb</td>
+                        <td class="month">Mar</td>
+                        <td class="month">Apr</td>
+                        <td class="month">May</td>
+                        <td class="month">Jun</td>
+                        <td class="month">Jul</td>
+                        <td class="month">Aug</td>
+                        <td class="month">Sep</td>
+                        <td class="month">Oct</td>
+                        <td class="month">Nov</td>
+                        <td class="month">Dec</td>
+                      </tr>
+                    </tbody>
+                  </table>
+
+                  <table class="days-table">
+                    <td class="day">Sun</td>
+                    <td class="day">Mon</td>
+                    <td class="day">Tue</td>
+                    <td class="day">Wed</td>
+                    <td class="day">Thu</td>
+                    <td class="day">Fri</td>
+                    <td class="day">Sat</td>
+                  </table>
+                  <div class="frame">
+                    <table class="dates-table">
+                      <tbody class="tbody">
+                      </tbody>
+                    </table>
+                  </div>
+                  <button class="button" id="add-button">Add Event</button>
+                </div>
+              </div>
+              <div class="events-container">
+              </div>
+              <div class="dialog" id="dialog">
+                <h2 class="dialog-header"> Add New Event </h2>
+                <form class="form" id="form">
+                  <div class="form-container" align="center">
+                    <label class="form-label" id="valueFromMyButton" for="name">Event name</label>
+                    <input class="input" type="text" id="name" maxlength="36">
+                    <label class="form-label" id="valueFromMyButton" for="count">Number of people to invite</label>
+                    <input class="input" type="number" id="count" min="0" max="1000000" maxlength="7">
+                    <input type="button" value="Cancel" class="button" id="cancel-button">
+                    <input type="button" value="OK" class="button" id="ok-button">
+                  </div>
+                </form>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="mb-2 row text-center">
+          <p>Map will be here</p>
 
         </div>
       </div>
     </div>
   </body>
 
-<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-ka7Sk0Gln4gmtz2MlQnikT1wXgYsOg+OMhuP+IlRH9sENBO0LRn5q+8nbTov4+1p" crossorigin="anonymous"></script>
-
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-ka7Sk0Gln4gmtz2MlQnikT1wXgYsOg+OMhuP+IlRH9sENBO0LRn5q+8nbTov4+1p" crossorigin="anonymous"></script>
+  <script
+    src="https://code.jquery.com/jquery-3.2.1.min.js"
+    integrity="sha256-hwg4gsxgFZhOsEEamdOYGBf13FyQuiTwlAQgxVSNgt4="
+    crossorigin="anonymous">
+  </script>
+  <!--<script src="./templates/js/calendar_js.js"></script> -->
 </html>

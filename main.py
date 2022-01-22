@@ -26,12 +26,6 @@ firebaseConfig = {
 pb = pyrebase.initialize_app(firebaseConfig)
 
 
-# client = bigquery.Client()
-# query = f"""
-# SELECT *
-#     FROM `ballin-338306.ballin.parks`"""
-# query_job = client.query(query)
-# print(query_job.result())
 app = Flask(__name__)
 
 # def check_token(f):

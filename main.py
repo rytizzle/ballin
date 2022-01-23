@@ -7,6 +7,7 @@ cred = credentials.Certificate("ballin-338306-ad7c80988861.json") #test to see i
 firebase = firebase_admin.initialize_app(cred)
 import pyrebase
 from google.cloud import bigquery
+import uuid
 
 os.environ["GOOGLE_APPLICATION_CREDENTIALS"] = "service_key.json"
 
@@ -27,15 +28,20 @@ pb = pyrebase.initialize_app(firebaseConfig)
 
 
 app = Flask(__name__)
+app.secret_key = str(uuid.uuid4())
+
 
 def check_token(f):
     @wraps(f)
     def wrap(*args,**kwargs):
-        if not request.headers.get('authorization'):
+        if session['token'] == None:
             return {'message': 'No token provided'},400
         try:
-            user = auth.verify_id_token(request.headers['authorization'])
+            user = auth.verify_id_token(session['token'])
             request.user = user
+            print('user', user)
+            print('request', request)
+            print('request. user', request.user)
         except:
             return {'message':'Invalid token provided.'},400
         return f(*args, **kwargs)
@@ -43,7 +49,7 @@ def check_token(f):
 
 
 @app.route("/home")
-# @check_token
+@check_token
 def home():
     client = bigquery.Client()
     #use pandas GBQ
@@ -65,12 +71,11 @@ def hello_kenny():
             try:
                 signin_user = pb.auth().sign_in_with_email_and_password(email, password)
                 token = signin_user['idToken']
-                # print('signing in')
-                # print(request.headers)
-                # print('*******************************')
-                # print(request.headers)
+                test = session['token'] = token
+                print(session)
                 # # request.headers['authorization'] = token
                 # # return{'token':token}, 200
+
                 return redirect(url_for('home'))
             except:
                 return {'message':'There was an error logging in'}, 400

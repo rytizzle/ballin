@@ -8,10 +8,12 @@ firebase = firebase_admin.initialize_app(cred)
 import pyrebase
 from google.cloud import bigquery
 import uuid
+# from datetime import datetime
+import datetime
+
+
 
 os.environ["GOOGLE_APPLICATION_CREDENTIALS"] = "service_key.json"
-
-
 
 firebaseConfig = {
   'apiKey': "AIzaSyCfST8hcWjnAGwtNKsnd7vzUNJy22Qkyqo",
@@ -39,16 +41,15 @@ def check_token(f):
         try:
             user = auth.verify_id_token(session['token'])
             request.user = user
-            print('user', user)
-            print('request', request)
-            print('request. user', request.user)
+            # print('user_id', user.get('user_id'))
+            session['user_id'] = user.get('user_id')
         except:
             return {'message':'Invalid token provided.'},400
         return f(*args, **kwargs)
     return wrap
 
 
-@app.route("/home")
+@app.route("/home", methods = ['GET', 'POST'])
 @check_token
 def home():
     client = bigquery.Client()
@@ -58,6 +59,40 @@ def home():
      FROM `ballin-338306.ballin.parks`
      ORDER BY park_id asc"""
     query_job = client.query(query)
+    print(session['user_id'])
+    # Accept Kenny Post Request to add into BQ
+    if request.method == 'POST':
+        data = request.get_json()
+        print(data)
+        table_id = "ballin-338306.ballin.events"
+        signup_id = str(uuid.uuid4())
+        print(signup_id)
+        user_id = session['user_id']
+        print(user_id)
+        park_id = data.get('park_id')
+        print(park_id)
+        play_timestamp = data.get('signup_time')
+        print(play_timestamp)
+        created_ts = datetime.datetime.now().strftime("%Y-%m-%dT%H:%M:%S.%f")
+        print(created_ts)
+        num_of_players = data.get('count')
+        print(num_of_players)
+
+        rows_to_insert = [
+            {u"signup_id": signup_id, 
+            u"user_id": user_id, 
+            u"park_id": park_id, 
+            u"play_timestamp": play_timestamp, 
+            u"created_ts": created_ts, 
+            u"num_of_players": num_of_players},
+            ]
+
+        errors = client.insert_rows_json(table_id, rows_to_insert)  # Make an API request.
+        if errors == []:
+            print("New rows have been added.")
+        else:
+            print("Encountered errors while inserting rows: {}".format(errors))
+
     return render_template('home_page.html', results = query_job.result())
 
 @app.route("/", methods=['GET', 'POST'])
@@ -72,10 +107,7 @@ def hello_kenny():
                 signin_user = pb.auth().sign_in_with_email_and_password(email, password)
                 token = signin_user['idToken']
                 test = session['token'] = token
-                print(session)
-                # # request.headers['authorization'] = token
-                # # return{'token':token}, 200
-
+                # print(session)
                 return redirect(url_for('home'))
             except:
                 return {'message':'There was an error logging in'}, 400

@@ -7,13 +7,23 @@ cred = credentials.Certificate("ballin-338306-ad7c80988861.json") #test to see i
 firebase = firebase_admin.initialize_app(cred)
 import pyrebase
 from google.cloud import bigquery
+from google.cloud import secretmanager
 import uuid
 # from datetime import datetime
 import datetime
 
 
-
 os.environ["GOOGLE_APPLICATION_CREDENTIALS"] = "service_key.json"
+
+
+# def access_secret_version(PROJECT_ID,secret_id, version_id="latest"):
+#     client = secretmanager.SecretManagerServiceClient()
+#     name = f"projects/{PROJECT_ID}/secrets/{secret_id}/versions/{version_id}"
+#     response = client.access_secret_version(name=name)
+#     return response.payload.data.decode('UTF-8')
+
+# firebase_secret = access_secret_version('ballin-338306', 'firebaseConfig', version_id = 'latest')
+# print(firebase_secret)
 
 firebaseConfig = {
   'apiKey': "AIzaSyCfST8hcWjnAGwtNKsnd7vzUNJy22Qkyqo",

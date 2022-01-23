@@ -50,7 +50,7 @@ def home():
     query = f"""
     SELECT *
      FROM `ballin-338306.ballin.parks
-     ORDER BY park_id asc`"""
+     ORDER BY park_id asc"""
     query_job = client.query(query)
     return render_template('home_page.html', results = query_job.result())
 

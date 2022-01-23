@@ -1,8 +1,9 @@
 // Setup the calendar with the current date
+var selected_park = 1; //by default set to the first park_id
+
 $(document).ready(function(){
     var date = new Date();
     var today = date.getDate();
-    var selected_park = 1; //by default set to the first park_id
     // Set click handlers for DOM elements
     $(".right-button").click({date: date}, next_year);
     $(".left-button").click({date: date}, prev_year);
@@ -21,8 +22,6 @@ function get_park() {
 
     $(this).addClass('active').siblings().removeClass('active');
     selected_park = parseInt($(this).attr('name'));
-    console.log(selected_park);
-   
 }
 
 
@@ -140,7 +139,7 @@ function new_event(event) {
     $("#dialog").show(250);
     // Event handler for cancel button
     $("#cancel-button").click(function() {
-        $("#name").removeClass("error-input");
+        $("#signup-time").removeClass("error-input");
         $("#count").removeClass("error-input");
         $("#dialog").hide(250);
         $(".events-container").show(250);
@@ -148,12 +147,12 @@ function new_event(event) {
     // Event handler for ok button
     $("#ok-button").unbind().click({date: event.data.date}, function() {
         var date = event.data.date;
-        var name = $("#name").val().trim();
+        var signup_time = $("#signup-time").val().trim();
         var count = parseInt($("#count").val().trim());
         var day = parseInt($(".active-date").html());
         // Basic form validation
-        if(name.length === 0) {
-            $("#name").addClass("error-input");
+        if(signup_time.length === 0) {
+            $("#signup-time").addClass("error-input");
         }
         else if(isNaN(count)) {
             $("#count").addClass("error-input");
@@ -161,17 +160,34 @@ function new_event(event) {
         else {
             $("#dialog").hide(250);
             console.log("new event");
-            new_event_json(name, count, date, day);
+            new_event_json(signup_time, count, date, day);
             date.setDate(day);
             init_calendar(date);
+            post_ok_button(signup_time, count, date, day, selected_park);
         }
     });
 }
 
+
+function post_ok_button(signup_time, count, date, day, park_id) {
+    let data={"signup_time": signup_time,
+    "count": count,
+    "date": date,
+    "day": day,
+    "park_id": park_id};
+    
+    fetch("/home", {
+        method: "POST",
+        headers: {'Content-Type': 'application/json'}, 
+        body: JSON.stringify(data)
+      });
+
+}
+
 // Adds a json event to event_data
-function new_event_json(name, count, date, day) {
+function new_event_json(signup_time, count, date, day) {
     var event = {
-        "occasion": name,
+        "occasion": signup_time,
         "invited_count": count,
         "year": date.getFullYear(),
         "month": date.getMonth()+1,

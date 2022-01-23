@@ -11,6 +11,9 @@ from google.cloud import secretmanager
 import uuid
 # from datetime import datetime
 import datetime
+import pandas as pd
+import pyarrow
+import json
 
 
 os.environ["GOOGLE_APPLICATION_CREDENTIALS"] = "service_key.json"
@@ -68,20 +71,23 @@ def home():
         query_job = client.query(sql_query)
         return query_job.result() 
 
+    def jsonify_bigquery(bigquery_iterator):
+        return bigquery_iterator.to_dataframe().to_json(orient='records')
+
     parks_query = f"""
     SELECT *
      FROM `ballin-338306.ballin.parks`
      ORDER BY park_id asc"""
 
     event_agg_query = f"""
-    SELECT park_id, play_timestamp, sum(num_of_players)
+    SELECT park_id, play_timestamp, sum(num_of_players) as tot_players
     FROM `ballin-338306.ballin.events`
     GROUP BY 1,2
     ORDER BY park_id asc """
 
     park_obj = create_query_obj(parks_query)
-    event_obj = create_query_obj(event_agg_query)
-
+    event_obj_json = jsonify_bigquery(create_query_obj(event_agg_query))
+    print(event_obj_json[0])
     # Accept Kenny Post Request to add into BQ
     if request.method == 'POST':
         data = request.get_json()
@@ -107,8 +113,7 @@ def home():
             print("New rows have been added.")
         else:
             print("Encountered errors while inserting rows: {}".format(errors))
-
-    return render_template('home_page.html', results = {'parks_query':park_obj, 'events_query' : event_obj})
+    return render_template('home_page.html', results = {'parks_query':park_obj, 'events_query': event_obj_json})
 
 @app.route("/", methods=['GET', 'POST'])
 def hello_kenny():

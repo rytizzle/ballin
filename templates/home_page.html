@@ -28,7 +28,8 @@
           <div class="mb-2 col">
             <div class="col text-center">
               <div class="list-group">
-                {% for row in results %}
+                {% for row in results['parks_query'] %}
+
                   {% if row["park_id"] == 1 %}
                   <a href="#" name="{{ row['park_id'] }}" id="select-park" class="list-group-item list-group-item-action flex-column align-items-start active">
                   {% else %}
@@ -120,5 +121,9 @@
     integrity="sha256-hwg4gsxgFZhOsEEamdOYGBf13FyQuiTwlAQgxVSNgt4="
     crossorigin="anonymous">
   </script>
+  <script>
+    var test_var_in_html="{{results['events_query']}}";
+
+  </script>    
   <script src="{{ url_for('static', filename='js/calendar_js.js') }}"></script>
 </html>

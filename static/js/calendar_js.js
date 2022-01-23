@@ -19,6 +19,9 @@ var get_months = {
 $(document).ready(function(){
     var date = new Date();
     var today = date.getDate();
+    console.log(test_var_in_html);
+    console.log(typeof(test_var_in_html));
+    //test_var_in_html.forEach((row, index) => console.log(row));
     // Set click handlers for DOM elements
     $(".right-button").click({date: date}, next_year);
     $(".left-button").click({date: date}, prev_year);

@@ -1,4 +1,4 @@
-from flask import Flask, render_template, request, Blueprint, send_from_directory,jsonify,abort, redirect, url_for
+from flask import Flask, render_template, request, Blueprint, send_from_directory,jsonify,abort, redirect, url_for, session
 import os
 import firebase_admin
 from firebase_admin import credentials, auth
@@ -28,18 +28,18 @@ pb = pyrebase.initialize_app(firebaseConfig)
 
 app = Flask(__name__)
 
-# def check_token(f):
-#     @wraps(f)
-#     def wrap(*args,**kwargs):
-#         if not request.headers.get('authorization'):
-#             return {'message': 'No token provided'},400
-#         try:
-#             user = auth.verify_id_token(request.headers['authorization'])
-#             request.user = user
-#         except:
-#             return {'message':'Invalid token provided.'},400
-#         return f(*args, **kwargs)
-#     return wrap
+def check_token(f):
+    @wraps(f)
+    def wrap(*args,**kwargs):
+        if not request.headers.get('authorization'):
+            return {'message': 'No token provided'},400
+        try:
+            user = auth.verify_id_token(request.headers['authorization'])
+            request.user = user
+        except:
+            return {'message':'Invalid token provided.'},400
+        return f(*args, **kwargs)
+    return wrap
 
 
 @app.route("/home")
@@ -49,7 +49,8 @@ def home():
     #use pandas GBQ
     query = f"""
     SELECT *
-     FROM `ballin-338306.ballin.parks`"""
+     FROM `ballin-338306.ballin.parks
+     ORDER BY park_id asc`"""
     query_job = client.query(query)
     return render_template('home_page.html', results = query_job.result())
 
@@ -64,10 +65,12 @@ def hello_kenny():
             try:
                 signin_user = pb.auth().sign_in_with_email_and_password(email, password)
                 token = signin_user['idToken']
-                print('signing in')
-                print(request.headers)
-                # request.headers['authorization'] = token
-                # return{'token':token}, 200
+                # print('signing in')
+                # print(request.headers)
+                # print('*******************************')
+                # print(request.headers)
+                # # request.headers['authorization'] = token
+                # # return{'token':token}, 200
                 return redirect(url_for('home'))
             except:
                 return {'message':'There was an error logging in'}, 400

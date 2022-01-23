@@ -9,7 +9,7 @@
     <!-- Bootstrap CSS -->
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-1BmE4kWBq78iYhFldvKuhfTAU6auU8tT94WrHftjDbrCEXSU1oBoqyl2QvZ6jIW3" crossorigin="anonymous">
     <link href="https://fonts.googleapis.com/css?family=Lato:300,400,700&display=swap" rel="stylesheet">
-    <link type= "text/css" href="{{ url_for('static', filename='styles/home_page_style.css') }}">
+    <link rel="stylesheet" type= "text/css" href="{{ url_for('static', filename='styles/home_page_style.css') }}">
     <title>Ballin Content</title>
   </head>
   <style>
@@ -28,28 +28,23 @@
           <div class="mb-2 col">
             <div class="col text-center">
               <div class="list-group">
-                <a href="#" class="list-group-item list-group-item-action flex-column align-items-start active">
-                  <div class="d-flex w-100 justify-content-between">
-                    <h5 class="mb-1">Orange Memorial Park</h5>
-                    <small>35 W Orange Ave South San Francisco, CA 94080</small>
-                  </div>
-                </a>
-                <a href="#" class="list-group-item list-group-item-action flex-column align-items-start">
-                  <div class="d-flex w-100 justify-content-between">
-                    <h5 class="mb-1">Sunfish Park</h5>
-                    <small class="text-muted">Sunfish Park, Foster City, CA 94404</small>
-                  </div>
-                </a>
-                <a href="#" class="list-group-item list-group-item-action flex-column align-items-start">
-                  <div class="d-flex w-100 justify-content-between">
-                    <h5 class="mb-1">Catamaran Park</h5>
-                    <small class="text-muted">499 Catamaran St #479, Foster City, CA 94404</small>
-                  </div>
-                </a>
+                {% for row in results %}
+                  {% if row["park_id"] == 1 %}
+                  <a href="#" class="list-group-item list-group-item-action flex-column align-items-start active">
+                  {% else %}
+                  <a href="#" class="list-group-item list-group-item-action flex-column align-items-start">
+                  {% endif %}
+                    <div class="d-flex w-100 justify-content-between">
+                      <h5 class="mb-1">{{ row["park"] }}</h5>
+                      <small>{{ row["address"] }}, {{ row["state"] }} {{ row["zip"] }}</small>
+                    </div>
+                  </a>
+                {% endfor %}
               </div>
             </div>
           </div>
-          <div class="mb-2 col">
+          <div class="mb-2 col-8">
+            <!-- stolen from https://codepen.io/charlie7587/pen/eWLKaZ -->
             <div class="content">
               <div class="calendar-container">
                 <div class="calendar">
@@ -114,8 +109,6 @@
           </div>
         </div>
         <div class="mb-2 row text-center">
-          <p>Map will be here</p>
-
         </div>
       </div>
     </div>
@@ -127,5 +120,5 @@
     integrity="sha256-hwg4gsxgFZhOsEEamdOYGBf13FyQuiTwlAQgxVSNgt4="
     crossorigin="anonymous">
   </script>
-  <!--<script src="./templates/js/calendar_js.js"></script> -->
+  <script src="{{ url_for('static', filename='js/calendar_js.js') }}"></script>
 </html>

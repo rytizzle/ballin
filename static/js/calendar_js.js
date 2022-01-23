@@ -1,5 +1,20 @@
 // Setup the calendar with the current date
 var selected_park = 1; //by default set to the first park_id
+var get_months = {
+    'Jan' : '01',
+    'Feb' : '02',
+    'Mar' : '03',
+    'Apr' : '04',
+    'May' : '05',
+    'Jun' : '06',
+    'Jul' : '07',
+    'Aug' : '08',
+    'Sep' : '09',
+    'Oct' : '10',
+    'Nov' : '11',
+    'Dec' : '12'
+}
+
 
 $(document).ready(function(){
     var date = new Date();
@@ -170,12 +185,15 @@ function new_event(event) {
 
 
 function post_ok_button(signup_time, count, date, day, park_id) {
-    let data={"signup_time": signup_time,
+    let data={"signup_time": [$("#label").html(), "-",
+    get_months[$(".active-month").html()], "-",
+    $(".active-date").html(), " ",
+    signup_time].join(""),
     "count": count,
     "date": date,
     "day": day,
     "park_id": park_id};
-    
+   
     fetch("/home", {
         method: "POST",
         headers: {'Content-Type': 'application/json'}, 

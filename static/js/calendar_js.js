@@ -2,17 +2,29 @@
 $(document).ready(function(){
     var date = new Date();
     var today = date.getDate();
+    var selected_park = 1; //by default set to the first park_id
     // Set click handlers for DOM elements
     $(".right-button").click({date: date}, next_year);
     $(".left-button").click({date: date}, prev_year);
     $(".month").click({date: date}, month_click);
     $("#add-button").click({date: date}, new_event);
+    $(this).on("click", "#select-park", get_park);
     // Set current month as active
     $(".months-row").children().eq(date.getMonth()).addClass("active-month");
     init_calendar(date);
     var events = check_events(today, date.getMonth()+1, date.getFullYear());
     show_events(events, months[date.getMonth()], today);
 });
+
+
+function get_park() {
+
+    $(this).addClass('active').siblings().removeClass('active');
+    selected_park = parseInt($(this).attr('name'));
+    console.log(selected_park);
+   
+}
+
 
 // Initialize the calendar by appending the HTML dates
 function init_calendar(date) {

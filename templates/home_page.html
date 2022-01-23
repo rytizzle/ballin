@@ -30,9 +30,9 @@
               <div class="list-group">
                 {% for row in results %}
                   {% if row["park_id"] == 1 %}
-                  <a href="#" class="list-group-item list-group-item-action flex-column align-items-start active">
+                  <a href="#" name="{{ row['park_id'] }}" id="select-park" class="list-group-item list-group-item-action flex-column align-items-start active">
                   {% else %}
-                  <a href="#" class="list-group-item list-group-item-action flex-column align-items-start">
+                  <a href="#" name="{{ row['park_id'] }}" id="select-park" class="list-group-item list-group-item-action flex-column align-items-start">
                   {% endif %}
                     <div class="d-flex w-100 justify-content-between">
                       <h5 class="mb-1">{{ row["park"] }}</h5>

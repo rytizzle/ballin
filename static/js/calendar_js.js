@@ -233,7 +233,7 @@ function show_events(events, month, day) {
         for(var i=0; i<events.length; i++) {
             var event_card = $("<div class='event-card'></div>");
             var event_name = $("<div class='event-name'>"+events[i]["occasion"]+":</div>");
-            var event_count = $("<div class='event-count'>"+events[i]["invited_count"]+" Invited</div>");
+            var event_count = $("<div class='event-count'>"+events[i]["invited_count"]+" Going</div>");
             if(events[i]["cancelled"]===true) {
                 $(event_card).css({
                     "border-left": "10px solid #FF1744"

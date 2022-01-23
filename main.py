@@ -53,30 +53,35 @@ def check_token(f):
 @check_token
 def home():
     client = bigquery.Client()
-    #use pandas GBQ
-    query = f"""
+
+    def create_query_obj(sql_query):
+        query_job = client.query(sql_query)
+        return query_job.result() 
+
+    parks_query = f"""
     SELECT *
      FROM `ballin-338306.ballin.parks`
      ORDER BY park_id asc"""
-    query_job = client.query(query)
-    print(session['user_id'])
+
+    event_agg_query = f"""
+    SELECT park_id, play_timestamp, sum(num_of_players)
+    FROM `ballin-338306.ballin.events`
+    GROUP BY 1,2
+    ORDER BY park_id asc """
+
+    park_obj = create_query_obj(parks_query)
+    event_obj = create_query_obj(event_agg_query)
+
     # Accept Kenny Post Request to add into BQ
     if request.method == 'POST':
         data = request.get_json()
-        print(data)
         table_id = "ballin-338306.ballin.events"
         signup_id = str(uuid.uuid4())
-        print(signup_id)
         user_id = session['user_id']
-        print(user_id)
         park_id = data.get('park_id')
-        print(park_id)
         play_timestamp = data.get('signup_time')
-        print(play_timestamp)
         created_ts = datetime.datetime.now().strftime("%Y-%m-%dT%H:%M:%S.%f")
-        print(created_ts)
         num_of_players = data.get('count')
-        print(num_of_players)
 
         rows_to_insert = [
             {u"signup_id": signup_id, 
@@ -93,7 +98,7 @@ def home():
         else:
             print("Encountered errors while inserting rows: {}".format(errors))
 
-    return render_template('home_page.html', results = query_job.result())
+    return render_template('home_page.html', results = {'parks_query':park_obj, 'events_query' : event_obj})
 
 @app.route("/", methods=['GET', 'POST'])
 def hello_kenny():
@@ -133,12 +138,7 @@ def hello_kenny():
                 #input message flash logic here
                 #redirect
     return render_template('index.html') #input KM html code here
-
-
-# # users = [{'uid': 1, 'name': 'Noah Schairer'}]
-# # @app.route('/api/userinfo')
-# # def userinfo():
-# #     return {'data': users}, 200   
+  
 
 if __name__ == "__main__":
     app.run(debug=True, host="0.0.0.0", port=int(os.environ.get("PORT", 8080)))

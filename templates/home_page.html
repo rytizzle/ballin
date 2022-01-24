@@ -98,7 +98,7 @@
                 <form class="form" id="form">
                   <div class="form-container" align="center">
                     <label class="form-label" id="valueFromMyButton" for="signup-time">Time Slot</label>
-                    <input class="input" type="time" id="signup-time" step="3600">
+                    <input class="input" type="time" id="signup-time" step="360" min="00:00" max = "23:00">
                     <label class="form-label" id="valueFromMyButton" for="count">Total People</label>
                     <input class="input" type="number" id="count" min="0" max="1000000" maxlength="7">
                     <input type="button" value="Cancel" class="button" id="cancel-button">

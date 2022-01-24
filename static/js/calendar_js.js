@@ -19,8 +19,7 @@ var get_months = {
 $(document).ready(function(){
     var date = new Date();
     var today = date.getDate();
-    console.log(test_var_in_html);
-    console.log(typeof(test_var_in_html));
+    get_event_data(selected_park);
     //test_var_in_html.forEach((row, index) => console.log(row));
     // Set click handlers for DOM elements
     $(".right-button").click({date: date}, next_year);
@@ -185,6 +184,20 @@ function new_event(event) {
         }
     });
 }
+
+async function get_event_data(park_id) {
+    let data={"action": "select_event",
+    "park_id": park_id};
+   
+    const response = await fetch("/home", {
+        method: "POST",
+        headers: {'Content-Type': 'application/json'}, 
+        body: JSON.stringify(data)
+      });
+    console.log(response);
+
+}
+
 
 
 function post_ok_button(signup_time, count, date, day, park_id) {

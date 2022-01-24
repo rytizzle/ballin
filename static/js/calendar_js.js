@@ -15,12 +15,102 @@ var get_months = {
     'Nov' : '11',
     'Dec' : '12'
 }
+// Given data for events in JSON format
+var event_data = {"events": []};
+/*
+= {
+    "events": [
+    {
+        "occasion": " Repeated Test Event ",
+        "invited_count": 120,
+        "year": 2017,
+        "month": 5,
+        "day": 10,
+        "cancelled": true
+    },
+    {
+        "occasion": " Repeated Test Event ",
+        "invited_count": 120,
+        "year": 2017,
+        "month": 5,
+        "day": 10,
+        "cancelled": true
+    },
+        {
+        "occasion": " Repeated Test Event ",
+        "invited_count": 120,
+        "year": 2017,
+        "month": 5,
+        "day": 10,
+        "cancelled": true
+    },
+    {
+        "occasion": " Repeated Test Event ",
+        "invited_count": 120,
+        "year": 2017,
+        "month": 5,
+        "day": 10
+    },
+        {
+        "occasion": " Repeated Test Event ",
+        "invited_count": 120,
+        "year": 2017,
+        "month": 5,
+        "day": 10,
+        "cancelled": true
+    },
+    {
+        "occasion": " Repeated Test Event ",
+        "invited_count": 120,
+        "year": 2017,
+        "month": 5,
+        "day": 10
+    },
+        {
+        "occasion": " Repeated Test Event ",
+        "invited_count": 120,
+        "year": 2017,
+        "month": 5,
+        "day": 10,
+        "cancelled": true
+    },
+    {
+        "occasion": " Repeated Test Event ",
+        "invited_count": 120,
+        "year": 2017,
+        "month": 5,
+        "day": 10
+    },
+        {
+        "occasion": " Repeated Test Event ",
+        "invited_count": 120,
+        "year": 2017,
+        "month": 5,
+        "day": 10,
+        "cancelled": true
+    },
+    {
+        "occasion": " Repeated Test Event ",
+        "invited_count": 120,
+        "year": 2017,
+        "month": 5,
+        "day": 10
+    },
+    {
+        "occasion": " Test Event",
+        "invited_count": 120,
+        "year": 2017,
+        "month": 5,
+        "day": 11
+    }
+    ]
+};
+*/
 
 
 $(document).ready(function(){
     var date = new Date();
     var today = date.getDate();
-    console.log(event_data_response);
     get_event_data(selected_park);
     //test_var_in_html.forEach((row, index) => console.log(row));
     // Set click handlers for DOM elements
@@ -196,11 +286,37 @@ async function get_event_data(park_id) {
         headers: {'Content-Type': 'application/json',
         'Accept': 'application/json'}, 
         body: JSON.stringify(data)
-      }).then((response) => {
-        event_data_response = response.json();
-        console.log(event_data_response);
       })
+      
+      event_data_response = await event_response.json();
+
+      populate_events(); //populate the events variable
+
+      
 }
+
+function populate_events() {
+
+    event_temp = {"events": []};
+    for (var i = 0; i < event_data_response.length; i++) {
+        var date = new Date(event_data_response[i]["play_timestamp"]);
+        event_temp["events"].push({"occasion": ('0'+ date.getHours()).slice(-2) + ":" + ('0'+date.getMinutes()).slice(-2),
+                        "invited_count": event_data_response[i]["tot_players"],
+                        "year": date.getFullYear(),
+                        "month": date.getMonth()+1,
+                        "day": date.getDate(),
+                        "cancelled": false});
+    }
+    event_data = event_temp;
+    //copied from document ready function
+    var date = new Date();
+    var today = date.getDate();
+    init_calendar(date);
+    var events = check_events(today, date.getMonth()+1, date.getFullYear());
+    show_events(events, months[date.getMonth()], today);
+}
+
+
 
 
 
@@ -280,94 +396,7 @@ function check_events(day, month, year) {
     return events;
 }
 
-// Given data for events in JSON format
-var event_data = {
-    "events": [
-    {
-        "occasion": " Repeated Test Event ",
-        "invited_count": 120,
-        "year": 2017,
-        "month": 5,
-        "day": 10,
-        "cancelled": true
-    },
-    {
-        "occasion": " Repeated Test Event ",
-        "invited_count": 120,
-        "year": 2017,
-        "month": 5,
-        "day": 10,
-        "cancelled": true
-    },
-        {
-        "occasion": " Repeated Test Event ",
-        "invited_count": 120,
-        "year": 2017,
-        "month": 5,
-        "day": 10,
-        "cancelled": true
-    },
-    {
-        "occasion": " Repeated Test Event ",
-        "invited_count": 120,
-        "year": 2017,
-        "month": 5,
-        "day": 10
-    },
-        {
-        "occasion": " Repeated Test Event ",
-        "invited_count": 120,
-        "year": 2017,
-        "month": 5,
-        "day": 10,
-        "cancelled": true
-    },
-    {
-        "occasion": " Repeated Test Event ",
-        "invited_count": 120,
-        "year": 2017,
-        "month": 5,
-        "day": 10
-    },
-        {
-        "occasion": " Repeated Test Event ",
-        "invited_count": 120,
-        "year": 2017,
-        "month": 5,
-        "day": 10,
-        "cancelled": true
-    },
-    {
-        "occasion": " Repeated Test Event ",
-        "invited_count": 120,
-        "year": 2017,
-        "month": 5,
-        "day": 10
-    },
-        {
-        "occasion": " Repeated Test Event ",
-        "invited_count": 120,
-        "year": 2017,
-        "month": 5,
-        "day": 10,
-        "cancelled": true
-    },
-    {
-        "occasion": " Repeated Test Event ",
-        "invited_count": 120,
-        "year": 2017,
-        "month": 5,
-        "day": 10
-    },
-    {
-        "occasion": " Test Event",
-        "invited_count": 120,
-        "year": 2017,
-        "month": 5,
-        "day": 11
-    }
-    ]
-};
+
 
 const months = [ 
     "January", 

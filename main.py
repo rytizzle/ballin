@@ -80,7 +80,7 @@ def home():
      ORDER BY park_id asc"""
 
     event_agg_query = f"""
-    SELECT park_id, play_timestamp, sum(num_of_players) as tot_players
+    SELECT to_json_string(park_id, play_timestamp, sum(num_of_players) as tot_players) as json
     FROM `ballin-338306.ballin.events`
     GROUP BY 1,2
     ORDER BY park_id asc """
@@ -93,7 +93,8 @@ def home():
         data = request.get_json()
         if data['action'] == 'select_event':
             event_obj = create_query_obj(event_agg_query)
-            return render_template('/home_page.html', results = {'events_query':event_obj})
+            # return render_template('/home_page.html', results = {'events_query':event_obj})
+            print(event_obj)
 
         elif data['action'] == 'insert_event':
             table_id = "ballin-338306.ballin.events"

@@ -71,8 +71,8 @@ def home():
         query_job = client.query(sql_query)
         return query_job.result() 
 
-    def jsonify_bigquery(bigquery_iterator):
-        return bigquery_iterator.to_dataframe().to_json(orient='records')
+    # def jsonify_bigquery(bigquery_iterator):
+    #     return bigquery_iterator.to_dataframe().to_json(orient='records')
 
     parks_query = f"""
     SELECT *
@@ -86,34 +86,39 @@ def home():
     ORDER BY park_id asc """
 
     park_obj = create_query_obj(parks_query)
-    event_obj_json = jsonify_bigquery(create_query_obj(event_agg_query))
-    print(event_obj_json[0])
+    # event_obj_json = jsonify_bigquery(create_query_obj(event_agg_query))
+    
     # Accept Kenny Post Request to add into BQ
     if request.method == 'POST':
         data = request.get_json()
-        table_id = "ballin-338306.ballin.events"
-        signup_id = str(uuid.uuid4())
-        user_id = session['user_id']
-        park_id = data.get('park_id')
-        play_timestamp = data.get('signup_time')
-        created_ts = datetime.datetime.now().strftime("%Y-%m-%dT%H:%M:%S.%f")
-        num_of_players = data.get('count')
+        if data['action'] == 'select_event':
+            event_obj = create_query_obj(event_agg_query)
+            return event_obj
 
-        rows_to_insert = [
-            {u"signup_id": signup_id, 
-            u"user_id": user_id, 
-            u"park_id": park_id, 
-            u"play_timestamp": play_timestamp, 
-            u"created_ts": created_ts, 
-            u"num_of_players": num_of_players},
-            ]
+        elif data['action'] == 'insert_event':
+            table_id = "ballin-338306.ballin.events"
+            signup_id = str(uuid.uuid4())
+            user_id = session['user_id']
+            park_id = data.get('park_id')
+            play_timestamp = data.get('signup_time')
+            created_ts = datetime.datetime.now().strftime("%Y-%m-%dT%H:%M:%S.%f")
+            num_of_players = data.get('count')
 
-        errors = client.insert_rows_json(table_id, rows_to_insert)  # Make an API request.
-        if errors == []:
-            print("New rows have been added.")
-        else:
-            print("Encountered errors while inserting rows: {}".format(errors))
-    return render_template('home_page.html', results = {'parks_query':park_obj, 'events_query': event_obj_json})
+            rows_to_insert = [
+                {u"signup_id": signup_id, 
+                u"user_id": user_id, 
+                u"park_id": park_id, 
+                u"play_timestamp": play_timestamp, 
+                u"created_ts": created_ts, 
+                u"num_of_players": num_of_players},
+                ]
+
+            errors = client.insert_rows_json(table_id, rows_to_insert)  # Make an API request.
+            if errors == []:
+                print("New rows have been added.")
+            else:
+                print("Encountered errors while inserting rows: {}".format(errors))
+    return render_template('home_page.html', results = {'parks_query':park_obj})
 
 @app.route("/", methods=['GET', 'POST'])
 def hello_kenny():

@@ -321,7 +321,8 @@ function populate_events() {
 
 
 function post_ok_button(signup_time, count, date, day, park_id) {
-    let data={"signup_time": [$("#label").html(), "-",
+    let data={"action": "insert_event",
+    "signup_time": [$("#label").html(), "-",
     get_months[$(".active-month").html()], "-",
     $(".active-date").html(), " ",
     signup_time].join(""),

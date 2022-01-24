@@ -131,6 +131,7 @@ function get_park() {
 
     $(this).addClass('active').siblings().removeClass('active');
     selected_park = parseInt($(this).attr('name'));
+    get_event_data(selected_park);
 }
 
 
@@ -269,7 +270,6 @@ function new_event(event) {
         else {
             $("#dialog").hide(250);
             console.log("new event");
-            new_event_json(signup_time, count, date, day);
             date.setDate(day);
             init_calendar(date);
             post_ok_button(signup_time, count, date, day, selected_park);
@@ -339,17 +339,6 @@ function post_ok_button(signup_time, count, date, day, park_id) {
 
 }
 
-// Adds a json event to event_data
-function new_event_json(signup_time, count, date, day) {
-    var event = {
-        "occasion": signup_time,
-        "invited_count": count,
-        "year": date.getFullYear(),
-        "month": date.getMonth()+1,
-        "day": day
-    };
-    event_data["events"].push(event);
-}
 
 // Display all events of the selected date in card views
 function show_events(events, month, day) {

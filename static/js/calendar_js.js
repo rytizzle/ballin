@@ -1,5 +1,6 @@
 // Setup the calendar with the current date
 var selected_park = 1; //by default set to the first park_id
+var event_data_response; //this will be the data for the events
 var get_months = {
     'Jan' : '01',
     'Feb' : '02',
@@ -19,8 +20,8 @@ var get_months = {
 $(document).ready(function(){
     var date = new Date();
     var today = date.getDate();
-    var event_data_response = get_event_data(selected_park);
     console.log(event_data_response);
+    get_event_data(selected_park);
     //test_var_in_html.forEach((row, index) => console.log(row));
     // Set click handlers for DOM elements
     $(".right-button").click({date: date}, next_year);
@@ -190,22 +191,15 @@ async function get_event_data(park_id) {
     let data={"action": "select_event",
     "park_id": park_id};
 
-    const response = await fetch("/home", {
+    const event_response = await fetch("/home", {
         method: "POST",
         headers: {'Content-Type': 'application/json',
         'Accept': 'application/json'}, 
         body: JSON.stringify(data)
-      }).then((resolve, reject) => {
-        resolve();
+      }).then((response) => {
+        event_data_response = response.json();
+        console.log(event_data_response);
       })
-    
-    const response_data = response.json();
-    console.log(response_data);
-    
-
-    return response_data;
-
-
 }
 
 

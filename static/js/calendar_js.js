@@ -19,7 +19,8 @@ var get_months = {
 $(document).ready(function(){
     var date = new Date();
     var today = date.getDate();
-    console.log(get_event_data(selected_park));
+    var event_data_response = get_event_data(selected_park);
+    console.log(event_data_response);
     //test_var_in_html.forEach((row, index) => console.log(row));
     // Set click handlers for DOM elements
     $(".right-button").click({date: date}, next_year);
@@ -188,22 +189,22 @@ function new_event(event) {
 async function get_event_data(park_id) {
     let data={"action": "select_event",
     "park_id": park_id};
-    
-    var response_data;
 
     const response = await fetch("/home", {
         method: "POST",
         headers: {'Content-Type': 'application/json',
         'Accept': 'application/json'}, 
         body: JSON.stringify(data)
-      }).then(response => response.json())
-      .then(data => {
-        console.log('Success:', data);
+      }).then((resolve, reject) => {
+        resolve();
       })
-      
     
+    const response_data = response.json();
     console.log(response_data);
-    return response;
+    
+
+    return response_data;
+
 
 }
 

@@ -11,7 +11,6 @@ from google.cloud import secretmanager
 import uuid
 # from datetime import datetime
 import datetime
-import pandas as pd
 import pyarrow
 import json
 

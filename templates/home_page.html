@@ -17,6 +17,10 @@
     <title>Ballin Content</title>
     <script src="https://polyfill.io/v3/polyfill.min.js?features=default"></script>
 
+    <link rel="stylesheet" href="https://kendo.cdn.telerik.com/2022.1.119/styles/kendo.default-v2.min.css"/>
+
+    <script src="https://code.jquery.com/jquery-1.12.4.min.js"></script>
+    <script src="https://kendo.cdn.telerik.com/2022.1.119/js/kendo.all.min.js"></script>
   </head>
   <style>
 
@@ -108,8 +112,12 @@
                 <form class="form" id="form">
                   <div class="form-container" align="center">
                     <label class="form-label" id="valueFromMyButton" for="signup-time">Time Slot</label>
+<<<<<<< HEAD
                     <!-- <input class="input" type="time" id="timepicker" > -->
                     <input id="timepicker" />
+=======
+                    <input class="input" type="time" id="signup-time">
+>>>>>>> 6d66c2570e48497a68cbbc8de9db53f9362d8237
                     <label class="form-label" id="valueFromMyButton" for="count">Total People</label>
                     <input class="input" type="number" id="count" min="0" max="1000000" maxlength="7">
                     <input type="button" value="Cancel" class="button" id="cancel-button">
@@ -124,6 +132,13 @@
         </div>
       </div>
     </div>
+
+
+  <script>
+      $("#signup-time").kendoTimePicker({
+          interval: 30
+      });
+      </script>
   </body>
 
   <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-ka7Sk0Gln4gmtz2MlQnikT1wXgYsOg+OMhuP+IlRH9sENBO0LRn5q+8nbTov4+1p" crossorigin="anonymous"></script>

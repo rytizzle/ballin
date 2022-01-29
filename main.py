@@ -143,7 +143,7 @@ def hello_kenny():
                 return redirect(url_for('home'))
             except:
                 flash('There was an error logging in.', category='error')
-                return {'message':'There was an error logging in'}, 400
+         
 
         #Handle signup form
         if request.form['action'] == 'create':

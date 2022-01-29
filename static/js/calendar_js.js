@@ -271,8 +271,8 @@ function new_event(event) {
             $("#dialog").hide(250);
             console.log("new event");
             date.setDate(day);
-            init_calendar(date);
             post_ok_button(signup_time, count, date, day, selected_park);
+            init_calendar(date);
         }
     });
 }

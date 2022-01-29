@@ -337,6 +337,8 @@ function post_ok_button(signup_time, count, date, day, park_id) {
         body: JSON.stringify(data)
       });
 
+    get_event_data(park_id);
+
 }
 
 

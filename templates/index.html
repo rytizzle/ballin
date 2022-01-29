@@ -28,7 +28,7 @@
       opacity: 1;
    }
 
-   #create-account-form {
+   #login-form,#reset-form  {
      border-left: 0.1rem solid white;
    }
   </style>
@@ -41,54 +41,70 @@
           </div>
         </div>
         <div class="mb-2 row">
-          <div class="mb-2 col">
-            <form id="login-form" method="post">
+            <div id="create-account-form" class="mb-2 col">
+              <form id="create_account_form" method="post">
+  
+                <h3 class="fw-normal mb-3 pb-3" style="letter-spacing: 1px;">Create Account</h3>
+  
+                <div class="form-outline mb-4">
+                  <input type="email" name="create_email" class="form-control form-control-lg" required/>
+                  <label class="form-label" for="create_email">Email address</label>
+                </div>
+  
+                <div class="form-outline mb-4">
+                  <input type="password" name="create_password" class="form-control form-control-lg" required/>
+                  <label class="form-label" for="create_password">Password</label>
+                </div>
+  
+                <div class="form-outline mb-4">
+                  <input type="password" name="check_create_password" class="form-control form-control-lg" required/>
+                  <label class="form-label" for="check_create_password">Re-Enter Password</label>
+                </div>
+  
+                <div class="pt-1 mb-4">
+                  <button class="btn btn-info btn-lg btn-block" type="submit" name = 'action' value = 'create'>Create Account</button>
+                </div>
+  
+              </form>
+            </div>
+            <div id="login-form" class="mb-2 col">
+              <form method="post">
 
-              <h3 class="fw-normal mb-3 pb-3" style="letter-spacing: 1px;">Log in</h3>
+                <h3 class="fw-normal mb-3 pb-3" style="letter-spacing: 1px;">Log in</h3>
+  
+                <div class="form-outline mb-4">
+                  <input type="email" name = "user_email" class="form-control form-control-lg" required/>
+                  <label class="form-label" for="user_email">Email address</label>
+                </div>
+  
+                <div class="form-outline mb-4">
+                  <input type="password" name="user_password" class="form-control form-control-lg" required/>
+                  <label class="form-label" for="user_password">Password</label>
+                </div>
+  
+                <div class="pt-1 mb-4">
+                  <button class="btn btn-info btn-lg btn-block" type="submit" name = 'action' value ="login">Login</button>
+                </div>
+              </form>
+            </div>
+            <div id="reset-form" class="mb-2 col">
+              <form method="post">
 
-              <div class="form-outline mb-4">
-                <input type="email" name = "user_email" class="form-control form-control-lg" required/>
-                <label class="form-label" for="user_email">Email address</label>
-              </div>
-
-              <div class="form-outline mb-4">
-                <input type="password" name="user_password" class="form-control form-control-lg" required/>
-                <label class="form-label" for="user_password">Password</label>
-              </div>
-
-              <div class="pt-1 mb-4">
-                <button class="btn btn-info btn-lg btn-block" type="submit" name = 'action' value ="login">Login</button>
-              </div>
-
-            </form>
+                <h3 class="fw-normal mb-3 pb-3" style="letter-spacing: 1px;">Reset Password</h3>
+  
+                <div class="form-outline mb-4">
+                  <input type="email" name = "user_email" class="form-control form-control-lg" required/>
+                  <label class="form-label" for="user_email">Email address</label>
+                </div>
+  
+                <div class="pt-1 mb-4">
+                  <button class="btn btn-info btn-lg btn-block" type="submit" name = 'action' value ="reset-password">Reset Password</button>
+                </div>
+              </form>
+            </div>
+            
           </div>
-          <div id="create-account-form" class="mb-2 col">
-            <form id="create_account_form" method="post">
-
-              <h3 class="fw-normal mb-3 pb-3" style="letter-spacing: 1px;">Create Account</h3>
-
-              <div class="form-outline mb-4">
-                <input type="email" name="create_email" class="form-control form-control-lg" required/>
-                <label class="form-label" for="create_email">Email address</label>
-              </div>
-
-              <div class="form-outline mb-4">
-                <input type="password" name="create_password" class="form-control form-control-lg" required/>
-                <label class="form-label" for="create_password">Password</label>
-              </div>
-
-              <div class="form-outline mb-4">
-                <input type="password" name="check_create_password" class="form-control form-control-lg" required/>
-                <label class="form-label" for="check_create_password">Re-Enter Password</label>
-              </div>
-
-              <div class="pt-1 mb-4">
-                <button class="btn btn-info btn-lg btn-block" type="submit" name = 'action' value = 'create'>Create Account</button>
-              </div>
-
-            </form>
-          </div>
-        </div>
+          
       </div>
     </div>
   </body>

@@ -282,6 +282,9 @@ function new_event(event) {
             init_calendar(date);
         }
     });
+    $("#timepicker").kendoTimePicker({
+        interval: 15
+          });
 }
 
 async function get_event_data(park_id) {

@@ -161,8 +161,12 @@ def hello_kenny():
                 #redirect
 
         #HANDLE PASSWORD RESET HERE
-        if request.form['action'] == 'reset':
-            auth.send_password_reset_email("email")
+        if request.form['action'] == 'reset-password':
+            data = request.form
+            try:
+                pb.auth().send_password_reset_email(data.get('user_email'))
+            except:
+                pass
             #some code to display an email has been sent for a password reset
 
     return render_template('index.html') #input KM html code here

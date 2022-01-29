@@ -259,6 +259,7 @@ function new_event(event) {
         $("#count").removeClass("error-input");
         $("#dialog").hide(250);
         $(".events-container").show(250);
+
     });
     // Event handler for ok button
     $("#ok-button").unbind().click({date: event.data.date}, function() {

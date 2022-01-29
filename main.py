@@ -1,4 +1,4 @@
-from flask import Flask, render_template, request, Blueprint, send_from_directory,jsonify,abort, redirect, url_for, session
+from flask import Flask, flash, render_template, request, Blueprint, send_from_directory,jsonify,abort, redirect, url_for, session
 import os
 import firebase_admin
 from firebase_admin import credentials, auth
@@ -166,7 +166,7 @@ def hello_kenny():
             try:
                 pb.auth().send_password_reset_email(data.get('user_email'))
             except:
-                pass
+                flash('Your password didn\'t reset bish', category='error')
             #some code to display an email has been sent for a password reset
 
     return render_template('index.html') #input KM html code here

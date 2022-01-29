@@ -9,7 +9,7 @@ import pyrebase
 from google.cloud import bigquery
 from google.cloud import secretmanager
 import uuid
-# from datetime import datetime
+import pandas
 import datetime
 import pyarrow
 import json

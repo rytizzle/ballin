@@ -259,6 +259,7 @@ function new_event(event) {
         $("#count").removeClass("error-input");
         $("#dialog").hide(250);
         $(".events-container").show(250);
+
     });
     // Event handler for ok button
     $("#ok-button").unbind().click({date: event.data.date}, function() {
@@ -281,6 +282,9 @@ function new_event(event) {
             init_calendar(date);
         }
     });
+    $("#timepicker").kendoTimePicker({
+        interval: 15
+          });
 }
 
 async function get_event_data(park_id) {

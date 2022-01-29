@@ -14,6 +14,7 @@ import datetime
 import pandas as pd
 import pyarrow
 import json
+from datetime import datetime
 
 
 os.environ["GOOGLE_APPLICATION_CREDENTIALS"] = "service_key.json"
@@ -102,8 +103,8 @@ def home():
             signup_id = str(uuid.uuid4())
             user_id = session['user_id']
             park_id = data.get('park_id')
-            play_timestamp = data.get('signup_time')
-            created_ts = datetime.datetime.now().strftime("%Y-%m-%dT%H:%M:%S.%f")
+            play_timestamp = datetime.strptime(data.get('signup_time'),'%Y-%m-%d %I:%M %p').strftime("%Y-%m-%dT%H:%M:%S")
+            created_ts = datetime.datetime.now().strftime("%Y-%m-%dT%H:%M:%S")
             num_of_players = data.get('count')
 
             rows_to_insert = [

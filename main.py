@@ -120,8 +120,10 @@ def home():
 
             errors = client.insert_rows_json(table_id, rows_to_insert)  # Make an API request.
             if errors == []:
+                flash('Your event has successfully been added.', category='success')
                 print("New rows have been added.")
             else:
+                flash('Your event has not been added.', category='error')
                 print("Encountered errors while inserting rows: {}".format(errors))
     return render_template('home_page.html', results = {'parks_query':park_obj})
 
@@ -140,6 +142,7 @@ def hello_kenny():
                 # print(session)
                 return redirect(url_for('home'))
             except:
+                flash('There was an error logging in.', category='error')
                 return {'message':'There was an error logging in'}, 400
 
         #Handle signup form
@@ -157,8 +160,10 @@ def hello_kenny():
                 #add user to FB
                 try:
                     pb.auth().create_user_with_email_and_password(email =  create_email, password = create_pw)
+                    flash('You have successfully created an account.', category='success')
                     print('Successfully created new account')
                 except:
+                    flash('Email already exists.', category='error')
                     print('Email already exists')
                 #input message flash logic here
                 #redirect
@@ -167,9 +172,10 @@ def hello_kenny():
         if request.form['action'] == 'reset-password':
             data = request.form
             try:
+                flash('You have been sent a password reset email. Please check your email.', category='success')
                 pb.auth().send_password_reset_email(data.get('user_email'))
             except:
-                flash('Your password didn\'t reset bish', category='error')
+                flash('Your password didn\'t reset.', category='error')
             #some code to display an email has been sent for a password reset
 
     return render_template('index.html') #input KM html code here

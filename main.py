@@ -45,6 +45,16 @@ pb = pyrebase.initialize_app(firebaseConfig)
 app = Flask(__name__)
 app.secret_key = str(uuid.uuid4())
 
+def events_query_func(park_id = 1):
+    client = bigquery.Client()
+    sql_query = f"""
+    SELECT park_id, DATETIME_TRUNC(play_timestamp, MINUTE) as play_timestamp, sum(num_of_players) as tot_players
+    FROM `ballin-338306.ballin.events`
+    WHERE park_id = {park_id}
+    GROUP BY 1,2
+    ORDER BY 2 ASC """
+    query_job = client.query(sql_query)
+    return query_job.result()
 
 def check_token(f):
     @wraps(f)
@@ -67,9 +77,12 @@ def check_token(f):
 def home():
     client = bigquery.Client()
 
-    def create_query_obj(sql_query):
-        query_job = client.query(sql_query)
-        return query_job.result() 
+    def create_query_obj(sql_query, park_filter = False, park = 1):
+        if park_filter == False:
+            query_job = client.query(sql_query)
+            return query_job.result() 
+        elif park_filter == True:
+            where_clause = f"WHERE park_id = {park}"
 
     # def jsonify_bigquery(bigquery_iterator):
     #     return bigquery_iterator.to_dataframe().to_json(orient='records')
@@ -79,11 +92,11 @@ def home():
      FROM `ballin-338306.ballin.parks`
      ORDER BY park_id asc"""
 
-    event_agg_query = f"""
-    SELECT park_id, play_timestamp, sum(num_of_players) as tot_players
-    FROM `ballin-338306.ballin.events`
-    GROUP BY 1,2
-    ORDER BY park_id asc """
+    # event_agg_query = f"""
+    # SELECT park_id, play_timestamp, sum(num_of_players) as tot_players
+    # FROM `ballin-338306.ballin.events`
+    # GROUP BY 1,2
+    # ORDER BY park_id asc """
 
     park_obj = create_query_obj(parks_query)
     # event_obj_json = jsonify_bigquery(create_query_obj(event_agg_query))
@@ -92,7 +105,9 @@ def home():
     if request.method == 'POST':
         data = request.get_json()
         if data['action'] == 'select_event':
-            event_obj = create_query_obj(event_agg_query)
+            print(data)
+            event_obj = events_query_func(park_id = data.get('park_id'))
+            print(data.get('park_id'))
             return event_obj.to_dataframe().to_json(orient='records')
 
         elif data['action'] == 'insert_event':
@@ -157,6 +172,12 @@ def hello_kenny():
                     print('Email already exists')
                 #input message flash logic here
                 #redirect
+
+        #HANDLE PASSWORD RESET HERE
+        if request.form['action'] == 'reset':
+            auth.send_password_reset_email("email")
+            #some code to display an email has been sent for a password reset
+
     return render_template('index.html') #input KM html code here
   
 

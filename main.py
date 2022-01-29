@@ -125,6 +125,7 @@ def home():
             else:
                 flash('Your event has not been added.', category='error')
                 print("Encountered errors while inserting rows: {}".format(errors))
+    flash('Your homepage has been loaded.', category='success')
     return render_template('home_page.html', results = {'parks_query':park_obj})
 
 @app.route("/", methods=['GET', 'POST'])

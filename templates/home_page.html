@@ -15,6 +15,8 @@
     <script src="/js/my.js"></script>
 
     <title>Ballin Content</title>
+    <script src="https://polyfill.io/v3/polyfill.min.js?features=default"></script>
+
   </head>
   <style>
 
@@ -31,20 +33,24 @@
         <div class="mb-2 row">
           <div class="mb-2 col">
             <div class="col text-center">
-              <div class="list-group">
-                {% for row in results['parks_query'] %}
+              <div class="row text-center">
+                <div class="list-group">
+                  {% for row in results['parks_query'] %}
 
-                  {% if row["park_id"] == 1 %}
-                  <a href="#" name="{{ row['park_id'] }}" id="select-park" class="list-group-item list-group-item-action flex-column align-items-start active">
-                  {% else %}
-                  <a href="#" name="{{ row['park_id'] }}" id="select-park" class="list-group-item list-group-item-action flex-column align-items-start">
-                  {% endif %}
-                    <div class="d-flex w-100 justify-content-between">
-                      <h5 class="mb-1">{{ row["park"] }}</h5>
-                      <small>{{ row["address"] }}, {{ row["state"] }} {{ row["zip"] }}</small>
-                    </div>
-                  </a>
-                {% endfor %}
+                    {% if row["park_id"] == 1 %}
+                    <a href="#" name="{{ row['park_id']|string + '|' + row['latitude']|string + '|' + row['longitude']|string }}" id="select-park" class="list-group-item list-group-item-action flex-column align-items-start active">
+                    {% else %}
+                    <a href="#" name="{{ row['park_id']|string + '|' + row['latitude']|string + '|' + row['longitude']|string }}" id="select-park" class="list-group-item list-group-item-action flex-column align-items-start">
+                    {% endif %}
+                      <div class="d-flex w-100 justify-content-between">
+                        <h5 class="mb-1">{{ row["park"] }}</h5>
+                        <small>{{ row["address"] }}, {{ row["state"] }} {{ row["zip"] }}</small>
+                      </div>
+                    </a>
+                  {% endfor %}
+                </div>
+              </div>
+              <div class="row text-center" id="map">
               </div>
             </div>
           </div>
@@ -126,7 +132,12 @@
     integrity="sha256-hwg4gsxgFZhOsEEamdOYGBf13FyQuiTwlAQgxVSNgt4="
     crossorigin="anonymous">
   </script>
- 
+  <script
+  src="https://maps.googleapis.com/maps/api/js?key=AIzaSyAiiJO4007TmM6dqm6HAbhRLUa4Mzmx4yg&callback=initMap&libraries=&v=weekly"
+  async
+  ></script>
+
+
   <script src="{{ url_for('static', filename='js/calendar_js.js') }}"></script>
 
   <script>

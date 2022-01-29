@@ -1,5 +1,7 @@
 // Setup the calendar with the current date
 var selected_park = 1; //by default set to the first park_id
+var selected_lat = 37.552990048558584;
+var selected_long = -122.26523195827912;
 var event_data_response; //this will be the data for the events
 var get_months = {
     'Jan' : '01',
@@ -130,7 +132,11 @@ $(document).ready(function(){
 function get_park() {
 
     $(this).addClass('active').siblings().removeClass('active');
-    selected_park = parseInt($(this).attr('name'));
+    parse_name_attr = $(this).attr('name').split("|")
+    selected_park = parseInt(parse_name_attr[0]);
+    selected_lat = parseFloat(parse_name_attr[1]);
+    selected_long = parseFloat(parse_name_attr[2]);
+    initMap(selected_lat, selected_long);
     get_event_data(selected_park);
 }
 
@@ -392,6 +398,28 @@ function check_events(day, month, year) {
     return events;
 }
 
+
+// Note: This example requires that you consent to location sharing when
+// prompted by your browser. If you see the error "The Geolocation service
+// failed.", it means you probably did not give permission for the browser to
+// locate you.
+let map, infoWindow;
+
+// Initialize and add the map
+function initMap(selected_lat=37.552990048558584, selected_long=-122.26523195827912) {
+    // The location of Uluru
+    const uluru = { lat: selected_lat, lng: selected_long };
+    // The map, centered at Uluru
+    const map = new google.maps.Map(document.getElementById("map"), {
+      zoom: 12,
+      center: uluru,
+    });
+    // The marker, positioned at Uluru
+    const marker = new google.maps.Marker({
+      position: uluru,
+      map: map,
+    });
+  }
 
 
 const months = [ 

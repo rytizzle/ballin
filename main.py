@@ -18,29 +18,16 @@ import json
 
 os.environ["GOOGLE_APPLICATION_CREDENTIALS"] = "service_key.json"
 
+#Secret Manager to host Keys
+def access_secret_version(PROJECT_ID,secret_id, version_id="latest"):
+    client = secretmanager.SecretManagerServiceClient()
+    name = f"projects/{PROJECT_ID}/secrets/{secret_id}/versions/{version_id}"
+    response = client.access_secret_version(name=name)
+    return response.payload.data.decode('UTF-8')
 
-# def access_secret_version(PROJECT_ID,secret_id, version_id="latest"):
-#     client = secretmanager.SecretManagerServiceClient()
-#     name = f"projects/{PROJECT_ID}/secrets/{secret_id}/versions/{version_id}"
-#     response = client.access_secret_version(name=name)
-#     return response.payload.data.decode('UTF-8')
+firebase_secret = eval(access_secret_version('ballin-338306', 'firebaseConfig', version_id = 'latest'))
 
-# firebase_secret = access_secret_version('ballin-338306', 'firebaseConfig', version_id = 'latest')
-# print(firebase_secret)
-
-firebaseConfig = {
-  'apiKey': "AIzaSyCfST8hcWjnAGwtNKsnd7vzUNJy22Qkyqo",
-  'authDomain': "ballin-338306.firebaseapp.com",
-  'projectId': "ballin-338306",
-  'storageBucket': "ballin-338306.appspot.com",
-  'messagingSenderId': "783132420898",
-  'appId': "1:783132420898:web:714816832bceda3fa5d37b",
-  'measurementId': "G-0FBFEGSGLS",
-  'databaseURL':''
-}
-
-pb = pyrebase.initialize_app(firebaseConfig)
-
+pb = pyrebase.initialize_app(firebase_secret)
 
 app = Flask(__name__)
 app.secret_key = str(uuid.uuid4())
@@ -174,8 +161,12 @@ def hello_kenny():
                 #redirect
 
         #HANDLE PASSWORD RESET HERE
-        if request.form['action'] == 'reset':
-            auth.send_password_reset_email("email")
+        if request.form['action'] == 'reset-password':
+            data = request.form
+            try:
+                pb.auth().send_password_reset_email(data.get('user_email'))
+            except:
+                pass
             #some code to display an email has been sent for a password reset
 
     return render_template('index.html') #input KM html code here

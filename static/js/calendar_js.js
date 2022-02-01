@@ -131,11 +131,14 @@ $(document).ready(function(){
 
 function get_park() {
 
+    $(this).css("background-color", "#52A0FD").siblings().css("background-color", "white");
     $(this).addClass('active').siblings().removeClass('active');
-    parse_name_attr = $(this).attr('name').split("|")
-    selected_park = parseInt(parse_name_attr[0]);
-    selected_lat = parseFloat(parse_name_attr[1]);
-    selected_long = parseFloat(parse_name_attr[2]);
+
+    
+    parse_name_attr = $(this).attr('name').split("_")
+    selected_park = parseInt(parse_name_attr[1]);
+    selected_lat = parseFloat(parse_name_attr[2]);
+    selected_long = parseFloat(parse_name_attr[3]);
     initMap(selected_lat, selected_long);
     get_event_data(selected_park);
 }
@@ -303,11 +306,22 @@ async function get_event_data(park_id) {
 }
 
 function populate_events() {
+    //stolen from https://javascript.plainenglish.io/how-to-display-javascript-datetime-in-12-hour-am-pm-format-637e05da5701
+    const formatAMPM = (date) => {
+        let hours = date.getHours();
+        let minutes = date.getMinutes();
+        let ampm = hours >= 12 ? 'pm' : 'am';
+        hours = hours % 12;
+        hours = hours ? hours : 12;
+        minutes = minutes.toString().padStart(2, '0');
+        let strTime = hours + ':' + minutes + ' ' + ampm;
+        return strTime;
+      }
 
     event_temp = {"events": []};
     for (var i = 0; i < event_data_response.length; i++) {
         var date = new Date(event_data_response[i]["play_timestamp"]);
-        event_temp["events"].push({"occasion": ('0'+ date.getHours()).slice(-2) + ":" + ('0'+date.getMinutes()).slice(-2),
+        event_temp["events"].push({"occasion": formatAMPM(date),
                         "invited_count": event_data_response[i]["tot_players"],
                         "year": date.getFullYear(),
                         "month": date.getMonth()+1,

@@ -13,7 +13,7 @@
 
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
 
-    <title>Ballin Content</title>
+    <title>Court Signup</title>
     <script src="https://polyfill.io/v3/polyfill.min.js?features=default"></script>
 
     <link rel="stylesheet" href="https://kendo.cdn.telerik.com/2022.1.119/styles/kendo.default-v2.min.css"/>
@@ -26,7 +26,7 @@
       href="https://stackpath.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css"
       crossorigin="anonymous"
     />
-  
+    
   </head>
   <style>
 
@@ -55,7 +55,7 @@
         <div class="mb-2 row">
           
           <div class="col text-center">
-            <h1 id="title">BALLIN!/h1>
+            <h1 id="title">Sign up for a court</h1>
           </div>
         </div>
         <div class="mb-2 row">
@@ -66,9 +66,9 @@
                   {% for row in results['parks_query'] %}
 
                     {% if row["park_id"] == 1 %}
-                    <a href="#" name="{{ row['park_id']|string + '|' + row['latitude']|string + '|' + row['longitude']|string }}" id="select-park" class="list-group-item list-group-item-action flex-column align-items-start active">
+                    <a href="#" name="{{ 'id_' + row['park_id']|string + '_' + row['latitude']|string + '_' + row['longitude']|string }}" id="select-park" class="list-group-item list-group-item-action flex-column align-items-start active">
                     {% else %}
-                    <a href="#" name="{{ row['park_id']|string + '|' + row['latitude']|string + '|' + row['longitude']|string }}" id="select-park" class="list-group-item list-group-item-action flex-column align-items-start">
+                    <a href="#" name="{{ 'id_' + row['park_id']|string + '_' + row['latitude']|string + '_' + row['longitude']|string }}" id="select-park" class="list-group-item list-group-item-action flex-column align-items-start">
                     {% endif %}
                       <div class="d-flex w-100 justify-content-between">
                         <h5 class="mb-1">{{ row["park"] }}</h5>

@@ -13,6 +13,10 @@ body {
     background-size: cover;
 } 
 
+.active[name="id_1_37.55313466536658_-122.26513540000204"] {
+    background-color: #52A0FD;
+}
+
 /* Set the size of the div element that contains the map */
 #map {
     height: 400px;
@@ -23,11 +27,21 @@ body {
 
 
 #main-container {
-    background: rgba(221, 221, 221, 0.5);
-    margin-top: 40px;
+    background: rgba(9, 9, 73, 0.5);
     border-radius: 15px;
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    -ms-transform: translate(-50%, -50%);
+    transform: translate(-50%, -50%);
 
   }
+
+
+#title {
+    color: white;
+
+}
 
 .title {
     color: white;
@@ -42,9 +56,9 @@ body {
     overflow: none;
     max-width: 790px;
     padding: 0px 0;
-    height: 500px;
+    height: 100%;
     position: relative;
-    margin: 20px auto;
+    margin: 0px auto;
     background: #52A0FD;
     background: -moz-linear-gradient(right,  #52A0FD 0%, #00C9FB 80%, #00C9FB 100%);
     background: -webkit-linear-gradient(right,  #52A0FD 0%, #00C9FB 80%, #00C9FB 100%);

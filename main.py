@@ -98,13 +98,17 @@ def home():
             return event_obj.to_dataframe().to_json(orient='records')
 
         elif data['action'] == 'insert_event':
+            print(data)
             table_id = "ballin-338306.ballin.events"
             signup_id = str(uuid.uuid4())
             user_id = session['user_id']
             park_id = data.get('park_id')
             play_timestamp = data.get('signup_time')
+            print(play_timestamp)
             format = '%Y-%m-%d %I:%M %p'
-            play_timestamp = datetime.datetime.strptime(play_timestamp, format).strftime("%Y-%m-%dT%H:%M:%S")
+            #Added timestamp logic +8 hours to account for UTC conversion. Need to create column to keep raw value.
+            play_timestamp = (datetime.datetime.strptime(play_timestamp, format)+datetime.timedelta(hours = 8)).strftime("%Y-%m-%dT%H:%M:%S")
+            print('converted',play_timestamp)
             created_ts = datetime.datetime.now().strftime("%Y-%m-%dT%H:%M:%S")
             num_of_players = data.get('count')
 

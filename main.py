@@ -12,7 +12,7 @@ import datetime
 import pyarrow
 import json
 
-os.environ["GOOGLE_APPLICATION_CREDENTIALS"] = "service_key.json"
+# os.environ["GOOGLE_APPLICATION_CREDENTIALS"] = "service_key.json"
 
 #Secret Manager to host Keys
 def access_secret_version(PROJECT_ID,secret_id, version_id="latest"):

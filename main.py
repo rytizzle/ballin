@@ -3,8 +3,6 @@ import os
 import firebase_admin
 from firebase_admin import credentials, auth
 from functools import wraps
-cred = credentials.Certificate("ballin-338306-ad7c80988861.json") #test to see if you can remove before hosting to cloud run
-firebase = firebase_admin.initialize_app(cred)
 import pyrebase
 from google.cloud import bigquery
 from google.cloud import secretmanager
@@ -13,8 +11,6 @@ import pandas
 import datetime
 import pyarrow
 import json
-
-
 
 os.environ["GOOGLE_APPLICATION_CREDENTIALS"] = "service_key.json"
 
@@ -25,10 +21,17 @@ def access_secret_version(PROJECT_ID,secret_id, version_id="latest"):
     response = client.access_secret_version(name=name)
     return response.payload.data.decode('UTF-8')
 
-firebase_secret = eval(access_secret_version('ballin-338306', 'firebaseConfig', version_id = 'latest'))
+#Firebase Admin
+admin_secret = eval(access_secret_version('ballin-338306', 'firebase_cred', version_id = 'latest'))
+cred = credentials.Certificate(admin_secret) #test to see if you can remove before hosting to cloud run
 
+#Pyrebase
+firebase = firebase_admin.initialize_app(cred)
+firebase_secret = eval(access_secret_version('ballin-338306', 'firebaseConfig', version_id = 'latest'))
 pb = pyrebase.initialize_app(firebase_secret)
 
+
+#Flask Object
 app = Flask(__name__)
 app.secret_key = str(uuid.uuid4())
 
@@ -43,6 +46,7 @@ def events_query_func(park_id = 1):
     query_job = client.query(sql_query)
     return query_job.result()
 
+#Authentication Decorator
 def check_token(f):
     @wraps(f)
     def wrap(*args,**kwargs):
